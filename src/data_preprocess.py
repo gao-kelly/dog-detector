@@ -23,3 +23,19 @@ for label in labels:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (128, 128))
         dataset.append((image, label))
+        
+        #skip blurry images edge case
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        blur = cv2.Laplacian(gray, cv2.CV_64F).var()
+        if blur < 100:
+            # If the image is too blurry, skip it
+            print("Image is too blurry. Skipping...")
+        else:
+            # If the image is not too blurry, use it
+            # Preprocess the image by resizing and normalizing
+            image = cv2.resize(image, (64, 64))
+            image = image / 255.0
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image, (128, 128))
+        dataset.append((image, label))
+
